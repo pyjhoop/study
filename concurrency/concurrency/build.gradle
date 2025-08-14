@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.study'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+    
+    // 테스트 실행 시 표준 출력을 보여줌
+    testLogging {
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
+}

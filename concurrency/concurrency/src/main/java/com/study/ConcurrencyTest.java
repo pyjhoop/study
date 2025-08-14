@@ -1,0 +1,32 @@
+package com.study;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class ConcurrencyTest {
+    
+    public static void main(String[] args) throws InterruptedException {
+        Increaser increaser = new Increaser();
+        ExecutorService executor = Executors.newFixedThreadPool(100);
+        CountDownLatch latch = new CountDownLatch(100);
+
+        // 모든 작업을 한번에 제출 (더 동시성 높음)
+        for (int i = 0; i < 100; i++) {
+            executor.submit(() -> {
+                try {
+                    for (int j = 0; j < 10; j++) {
+                        increaser.increase();
+                    }
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await(); // 모든 작업 완료 대기
+        executor.shutdown();
+
+        System.out.println("결과: " + increaser.getCount());
+    }
+}
